@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  hollander:
+    build: ./
+    image: hollander
+    container_name: node-hollander
+    # slow command for first docker-compose up:
+    command: bash -c "yarn && yarn start:dev"
+    # default command
+    # command: bash -c "yarn start"
+    restart: unless-stopped
+    ports:
+      - 3000:3000 #App port
+      - 9229:9229 #Debugger port
+    volumes:
+      - .:/app
+    working_dir: '/app'
+    # env_file: .env
