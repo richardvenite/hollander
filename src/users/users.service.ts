@@ -1,36 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { User, UserStatus } from './user.model';
-import {v1 as uuid} from 'uuid';
-import { CreateUserDto } from './dto/create-user.dto';
-import { GetUsersFilterDto } from './dto/get-users-filter.dto';
+import { UserStatus } from './user-status.enum';
+import { CreateUserDto, GetUsersFilterDto } from './user.dto';
+import { UserRepository } from './user.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-    private users: User[] = [];
+    constructor(
+        @InjectRepository(UserRepository)
+        private userRepository: UserRepository,
+    ) {}
 
-    getAllUsers(): User[] {
-        return this.users;
+    async createUser(createUserDto: CreateUserDto): Promise<any> {
+        const user = await this.userRepository.createUser(createUserDto);
+
+        return user;
     }
 
-    getUsersWithFilter(filterDto: GetUsersFilterDto): User[] {
-        const { status, search } = filterDto;
-
-        let users = this.getAllUsers();
-
-        if (status) {
-            users = users.filter(t => t.status === status);
-        }
-
-        if (search) {
-            users = users.filter(t => t.name.includes(search) || t.email.includes(search));
-        }
-
-        return users;
-    }
-
-    getUserById(id: string): User {
-        const user =  this.users.find(t => t.id == id);
-
+    async getUserById(id: number): Promise<User> {
+        const user = await this.userRepository.findOne(id);
+        
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);
         }
@@ -38,29 +28,15 @@ export class UsersService {
         return user;
     }
 
-    createUser(createUserDto: CreateUserDto): User {
-        const { name, email, password } = createUserDto;
-
-        const user: User = {
-            id: uuid(),
-            name,
-            email,
-            password,
-            status: UserStatus.ACTIVED
-        };
-
-        this.users.push(user);
-        return user;
-    }
-
-    deleteUser(id: string): void {
-        const user = this.getUserById(id);
-        this.users = this.users.filter(t => t.id !== user.id);
-    }
-
-    updateUserStatus(id: string, status: UserStatus): User {
-        const user = this.getUserById(id);
+    async updateUserStatus(id: number, status: UserStatus): Promise<User> {
+        const user = await this.getUserById(id);
         user.status = status;
-        return user;
+        user.save();
+
+        return user
+    }
+
+    async getUsers(filterDto: GetUsersFilterDto): Promise<User[]> {
+        return this.userRepository.getUsers(filterDto);
     }
 }

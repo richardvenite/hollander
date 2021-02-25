@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3'
 
 services:
   hollander:
@@ -17,3 +17,10 @@ services:
       - .:/app
     working_dir: '/app'
     # env_file: .env
+    networks:
+      projetos_servicos:
+        ipv4_address: 10.11.0.12
+
+networks:
+  projetos_servicos:
+   external: true

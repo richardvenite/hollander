@@ -1,41 +1,37 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { GetUsersFilterDto } from './dto/get-users-filter.dto';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CreateUserDto, GetUsersFilterDto } from './user.dto';
 import { UserStatusValidationPipe } from './pipes/user-pipes-validation.pipe';
-import { User, UserStatus } from './user.model';
+import { UserStatus } from './user-status.enum';
+import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService) {}
 
-    @Get()
-    getUsers(@Query(ValidationPipe) filterDto: GetUsersFilterDto): User[] {
-        if (Object.keys(filterDto).length) {
-            return this.usersService.getUsersWithFilter(filterDto);
-        }
-        
-        return this.usersService.getAllUsers();
-    }
-
-    @Get('/:id')
-    getUserById(@Param('id') id: string): User {
-        return this.usersService.getUserById(id);
-    }
-
     @Post()
     @UsePipes(ValidationPipe)
-    createUser(@Body() createUserDto: CreateUserDto): User  {
+    createUser(@Body() createUserDto: CreateUserDto): Promise<any>  {
         return this.usersService.createUser(createUserDto);
     }
 
-    @Delete('/:id')
-    deleteUser(@Param('id') id: string): void {
-        this.usersService.deleteUser(id);
+    @Get('/:id')
+    getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+        return this.usersService.getUserById(id);
     }
 
     @Patch('/:id/status')
-    updateUserStatus(@Param('id') id: string, @Body('status', UserStatusValidationPipe) status: UserStatus): User {
+    updateUserStatus(@Param('id', ParseIntPipe) id: number, @Body('status', UserStatusValidationPipe) status: UserStatus): Promise<User> {
         return this.usersService.updateUserStatus(id, status);
+    }
+
+    @Delete('/:id')
+    deleteUser(@Param('id',  ParseIntPipe) id: number): Promise<User> {
+        return this.usersService.updateUserStatus(id, UserStatus.DELETED);
+    }
+
+    @Get()
+    getUsers(@Query(ValidationPipe) filterDto: GetUsersFilterDto): Promise<User[]> {        
+        return this.usersService.getUsers(filterDto);
     }
 }
