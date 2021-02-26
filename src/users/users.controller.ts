@@ -7,31 +7,31 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
-    @Post()
-    @UsePipes(ValidationPipe)
-    createUser(@Body() createUserDto: CreateUserDto): Promise<any>  {
-        return this.usersService.createUser(createUserDto);
-    }
+  @Post()
+  @UsePipes(ValidationPipe)
+  createUser(@Body() createUserDto: CreateUserDto): Promise<any>  {
+    return this.usersService.createUser(createUserDto);
+  }
 
-    @Get('/:id')
-    getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
-        return this.usersService.getUserById(id);
-    }
+  @Get('/:id')
+  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return this.usersService.getUserById(id);
+  }
 
-    @Patch('/:id/status')
-    updateUserStatus(@Param('id', ParseIntPipe) id: number, @Body('status', UserStatusValidationPipe) status: UserStatus): Promise<User> {
-        return this.usersService.updateUserStatus(id, status);
-    }
+  @Patch('/:id/status')
+  updateUserStatus(@Param('id', ParseIntPipe) id: number, @Body('status', UserStatusValidationPipe) status: UserStatus): Promise<User> {
+    return this.usersService.updateUserStatus(id, status);
+  }
 
-    @Delete('/:id')
-    deleteUser(@Param('id',  ParseIntPipe) id: number): Promise<User> {
-        return this.usersService.updateUserStatus(id, UserStatus.DELETED);
-    }
+  @Delete('/:id')
+  deleteUser(@Param('id',  ParseIntPipe) id: number): Promise<User> {
+    return this.usersService.updateUserStatus(id, UserStatus.DELETED);
+  }
 
-    @Get()
-    getUsers(@Query(ValidationPipe) filterDto: GetUsersFilterDto): Promise<User[]> {        
-        return this.usersService.getUsers(filterDto);
-    }
+  @Get()
+  getUsers(@Query(ValidationPipe) filterDto: GetUsersFilterDto): Promise<User[]> {        
+    return this.usersService.getUsers(filterDto);
+  }
 }

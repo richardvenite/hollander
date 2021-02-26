@@ -6,40 +6,37 @@ import { v4 as uuid } from 'uuid';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    async createUser(createUserDto: CreateUserDto): Promise<User> {
-        const { name, email, password } = createUserDto;
-        const user = new User();
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { name, email, password } = createUserDto;
+    const user = new User();
 
-        user.name = name;
-        user.email = email;
-        user.password = password;
-        user.status = UserStatus.ACTIVED;
-        user.hash = uuid();
-        await user.save();
+    user.name = name;
+    user.email = email;
+    user.password = password;
+    user.status = UserStatus.ACTIVED;
+    user.hash = uuid();
+    await user.save();
 
-        return user;
+    return user;
+  }
+
+  async getUsers(filterDto: GetUsersFilterDto): Promise<User[]> {
+    const { name, email, status } = filterDto;
+    const query = this.createQueryBuilder('user');
+
+    if (name) {
+      query.andWhere('user.name LIKE :name', { name: `%${name}%` })
     }
 
-    async getUsers(filterDto: GetUsersFilterDto): Promise<User[]> {
-        const { name, email, status } = filterDto;
-        const query = this.createQueryBuilder('user');
-
-        if (name) {
-            query.andWhere('user.name LIKE :name', { name: `%${name}%` })
-        }
-
-        if (email) {
-            query.andWhere('user.email LIKE :email', { email: `%${email}%` })
-        }
-
-        if (status) {
-            query.andWhere('user.status = :status', { status: status })
-        }
-
-        query.andWhere('user.password = :password', { password: 'q1w2e3r4t5' })
-
-
-        const users = query.getMany();
-        return users;
+    if (email) {
+      query.andWhere('user.email LIKE :email', { email: `%${email}%` })
     }
+
+    if (status) {
+      query.andWhere('user.status = :status', { status: status })
+    }
+    
+    const users = query.getMany();
+    return users;
+  }
 }
