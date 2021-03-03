@@ -2,20 +2,33 @@ import { EntityRepository, Repository } from "typeorm";
 import { CreateUserDto, GetUsersFilterDto } from "./user.dto";
 import { UserStatus } from "./user-status.enum";
 import { User } from "./user.entity";
-import { v4 as uuid } from 'uuid';
+import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { PasswordTrait } from "src/trait/password.trait";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { name, email, password } = createUserDto;
     const user = new User();
+    
+    const trait = new PasswordTrait();
+    const result = await trait.hash(password);
 
     user.name = name;
     user.email = email;
-    user.password = password;
+    user.password = result.password;
     user.status = UserStatus.ACTIVED;
-    user.hash = uuid();
-    await user.save();
+    user.hash = result.hash;
+
+    try {
+      await user.save();
+    } catch (ex) {
+      if (ex.code == 23505) {
+        throw new ConflictException('Email already exists');
+      }
+
+      throw new InternalServerErrorException();
+    }
 
     return user;
   }

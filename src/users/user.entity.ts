@@ -1,8 +1,8 @@
-import { Exclude } from "class-transformer";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { UserStatus } from "./user-status.enum";
 
 @Entity()
+@Unique(['email', 'hash'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,7 +10,7 @@ export class User extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique:true })
   email: string;
 
   @Column({select: false})
@@ -19,6 +19,6 @@ export class User extends BaseEntity {
   @Column()
   status: UserStatus;
 
-  @Column({select: false})
+  @Column({ unique:true, select: false })
   hash: string;
 }
