@@ -1,14 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { UserProfileModule } from './user-profile/user-profile.module';
+import { ProfileModule } from './profile/profile.module';
+import { IntegrationModule } from './integration/integration.module';
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
+    UserProfileModule,
+    ProfileModule,
+    IntegrationModule,
     TypeOrmModule.forRoot(typeOrmConfig),
     AuthModule,
   ],

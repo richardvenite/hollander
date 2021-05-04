@@ -1,5 +1,6 @@
-import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import { Integration } from "../integration/integration.entity";
 
 @Entity()
 @Unique(['username'])
@@ -15,6 +16,9 @@ export class Admin extends BaseEntity {
 
   @Column()
   hash: string;
+
+  @OneToOne(type => Integration) @JoinColumn() 
+  integration: Integration;
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.hash);

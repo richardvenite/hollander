@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner} from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 import { PasswordTrait } from "../trait/password.trait";
 
 
@@ -9,7 +9,7 @@ export class AdminDefault1614374463816 implements MigrationInterface {
         const result = await trait.hash("Hollander0");
         const { password, hash } = result;
 
-        queryRunner.query(`INSERT INTO "public"."admin" (username, password, hash) VALUES ('master', '${password}', '${hash}')`);
+        queryRunner.query(`INSERT INTO "public"."admin" (username, password, hash, integrationId) VALUES ('master', '${password}', '${hash}', 0)`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

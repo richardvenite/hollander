@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthCredentialsDto } from './admin.dto';
+import { AuthCredentialsDto, AuthCreateDto } from './admin.dto';
 import { AdminRepository } from './admin.repository';
 import { JwtPayload } from './jwt-payload.interface';
 
@@ -24,5 +24,11 @@ export class AuthService {
     const accessToken = await this.jwtService.sign(payload);
 
     return { accessToken };
+  }
+
+  async createAdmin(authCreateDto: AuthCreateDto): Promise<any> {
+    const admin = await this.adminRepository.createAdmin(authCreateDto);
+
+    return admin;
   }
 }
