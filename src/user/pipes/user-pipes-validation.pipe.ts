@@ -1,4 +1,6 @@
-import { PipeTransform, BadRequestException } from "@nestjs/common";
+import { PipeTransform, BadRequestException, NotFoundException } from "@nestjs/common";
+import { ProfileRepository } from "src/profile/profile.repository";
+import { getCustomRepository } from "typeorm";
 import { UserStatus } from "../user-status.enum";
 
 export class UserStatusValidationPipe implements PipeTransform {

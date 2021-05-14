@@ -5,6 +5,8 @@ import { UserStatus } from './user-status.enum';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
+import { GetAdmin } from 'src/auth/get-admin.decorator';
+import { Admin } from 'src/auth/admin.entity';
 
 @Controller('user')
 @UseGuards(AuthGuard())
@@ -13,8 +15,8 @@ export class UserController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  createUser(@Body() createUserDto: CreateUserDto): Promise<any>  {
-    return this.userService.createUser(createUserDto);
+  createUser(@Body() createUserDto: CreateUserDto, @GetAdmin() admin: Admin): Promise<any>  {
+    return this.userService.createUser(createUserDto, admin);
   }
 
   @Get('/:id')

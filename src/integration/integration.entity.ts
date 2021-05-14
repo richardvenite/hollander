@@ -9,6 +9,6 @@ export class Integration extends BaseEntity {
   @Column()
   service: string;
 
-  @OneToMany(type => UserProfile, userProfile => userProfile.profiles, { eager: true })
+  @OneToMany(type => UserProfile, userProfile => userProfile.profile, { eager: true })
   userProfiles: UserProfile[];
 }

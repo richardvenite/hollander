@@ -4,6 +4,7 @@ import { CreateUserDto, GetUsersFilterDto } from './user.dto';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { Admin } from 'src/auth/admin.entity';
 
 @Injectable()
 export class UserService {
@@ -12,8 +13,8 @@ export class UserService {
     private userRepository: UserRepository,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<any> {
-    const user = await this.userRepository.createUser(createUserDto);
+  async createUser(createUserDto: CreateUserDto, admin: Admin): Promise<any> {
+    const user = await this.userRepository.createUser(createUserDto, admin);
 
     return user;
   }

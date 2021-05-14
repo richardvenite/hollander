@@ -1,5 +1,5 @@
 import { UserProfile } from "../user-profile/user-profile.entity";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Profile extends BaseEntity {
@@ -7,8 +7,8 @@ export class Profile extends BaseEntity {
   id: number;
 
   @Column()
-  name: string;
+  description: string;
 
-  @OneToMany(type => UserProfile, userProfile => userProfile.profiles, { eager: true })
+  @OneToMany(type => UserProfile, userProfile => userProfile.profile, { eager: true })
   userProfiles: UserProfile[];
 }

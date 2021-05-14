@@ -1,36 +1,70 @@
-import { EntityRepository, Repository } from "typeorm";
+import { EntityRepository, getCustomRepository, Repository } from "typeorm";
 import { CreateUserDto, GetUsersFilterDto } from "./user.dto";
 import { UserStatus } from "./user-status.enum";
 import { User } from "./user.entity";
-import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { PasswordTrait } from "src/trait/password.trait";
+import { Admin } from "src/auth/admin.entity";
+import { ProfileRepository } from "src/profile/profile.repository";
+import { UserProfileRepository } from "src/user-profile/user-profile.repository";
+import { Profile } from "src/profile/profile.entity";
+import { Integration } from "src/integration/integration.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, password } = createUserDto;
+  trait: PasswordTrait;
+
+  constructor() {
+    super();
+    this.trait = new PasswordTrait();
+  }
+
+  async createUser(createUserDto: CreateUserDto, admin: Admin): Promise<User> {
+    const { name, email, password, profileId } = createUserDto;
     const user = new User();
-    
-    const trait = new PasswordTrait();
-    const result = await trait.hash(password);
 
-    user.name = name;
-    user.email = email;
-    user.password = result.password;
-    user.status = UserStatus.ACTIVED;
-    user.hash = result.hash;
+    let profile = await this.existProfile(profileId);
 
-    try {
-      await user.save();
+    try {      
+      let result = await this.trait.hash(password);
+
+      user.name = name;
+      user.email = email;
+      user.password = result.password;
+      user.status = UserStatus.ACTIVED;
+      user.hash = result.hash;
+      await this.save(user);
+      
+      this.createUserProfile(user, admin.integration, profile);
     } catch (ex) {
       if (ex.code == 23505) {
         throw new ConflictException('Email already exists');
       }
 
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(ex.message);
     }
-
+    
     return user;
+  }
+
+  async existProfile(id: number): Promise<Profile> {
+    try {
+      let profileRepository = getCustomRepository(ProfileRepository);
+      let profile = await profileRepository.findOne(id);
+  
+      if (!profile) {
+        throw new NotFoundException(`Profile with ID ${id} not found`);
+      }
+
+      return profile;
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
+  async createUserProfile(user: User, integration: Integration, profile: Profile): Promise<void> {
+    let userProfileRepository = getCustomRepository(UserProfileRepository);
+    userProfileRepository.createUserProfile(user, integration, profile);
   }
 
   async getUsers(filterDto: GetUsersFilterDto): Promise<User[]> {

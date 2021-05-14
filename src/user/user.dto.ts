@@ -1,4 +1,4 @@
-import { IsEnum, IsIn, IsNotEmpty, IsOptional, IsEmail } from "class-validator";
+import { IsEnum, IsIn, IsNotEmpty, IsOptional, IsEmail, IsNumberString } from "class-validator";
 import { UserStatus } from "./user-status.enum";
 
 export class CreateUserDto {
@@ -11,6 +11,10 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  profileId: number;
 };
 
 export class GetUsersFilterDto {

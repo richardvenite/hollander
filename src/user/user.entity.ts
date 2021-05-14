@@ -1,5 +1,5 @@
 import { UserProfile } from "../user-profile/user-profile.entity";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { UserStatus } from "./user-status.enum";
 
 @Entity()
@@ -23,6 +23,6 @@ export class User extends BaseEntity {
   @Column({ unique:true, select: false })
   hash: string;
 
-  @OneToMany(type => UserProfile, userProfile => userProfile.profiles, { eager: true })
+  @OneToMany(type => UserProfile, userProfile => userProfile.profile, { eager: true })
   userProfiles: UserProfile[];
 }
