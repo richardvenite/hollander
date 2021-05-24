@@ -34,7 +34,7 @@ export class UserRepository extends Repository<User> {
       user.status = UserStatus.ACTIVED;
       user.hash = result.hash;
       await this.save(user);
-      
+
       this.createUserProfile(user, admin.integration, profile);
     } catch (ex) {
       if (ex.code == 23505) {
