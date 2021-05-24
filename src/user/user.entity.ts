@@ -23,6 +23,6 @@ export class User extends BaseEntity {
   @Column({ unique:true, select: false })
   hash: string;
 
-  @OneToMany(type => UserProfile, userProfile => userProfile.profile, { eager: true })
+  @OneToMany(type => UserProfile, userProfile => userProfile.user, { eager: true })
   userProfiles: UserProfile[];
 }

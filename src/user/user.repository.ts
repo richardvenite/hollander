@@ -67,23 +67,27 @@ export class UserRepository extends Repository<User> {
     userProfileRepository.createUserProfile(user, integration, profile);
   }
 
-  async getUsers(filterDto: GetUsersFilterDto): Promise<User[]> {
+  async getUsers(filterDto: GetUsersFilterDto, admin: Admin): Promise<User[]> {
     const { name, email, status } = filterDto;
     const query = this.createQueryBuilder('user');
 
+    query.innerJoin('user.userProfiles', 'profiles');
+    query.where('profiles.integrationId = :integrationId', { integrationId: admin.integration.id });
+
     if (name) {
-      query.andWhere('user.name LIKE :name', { name: `%${name}%` })
+      query.andWhere('user.name LIKE :name', { name: `%${name}%` });
     }
 
     if (email) {
-      query.andWhere('user.email LIKE :email', { email: `%${email}%` })
+      query.andWhere('user.email LIKE :email', { email: `%${email}%` });
     }
 
     if (status) {
-      query.andWhere('user.status = :status', { status: status })
+      query.andWhere('user.status = :status', { status: status });
     }
     
-    const users = query.getMany();
+    const users = await query.getMany();
+    console.log(users);
     return users;
   }
 }

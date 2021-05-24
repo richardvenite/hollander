@@ -37,7 +37,7 @@ export class UserService {
     return user
   }
 
-  async getUsers(filterDto: GetUsersFilterDto): Promise<User[]> {
-    return this.userRepository.getUsers(filterDto);
+  async getUsers(filterDto: GetUsersFilterDto, admin: Admin): Promise<User[]> {
+    return this.userRepository.getUsers(filterDto, admin);
   }
 }

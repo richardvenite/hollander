@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @Get()
-  getUsers(@Query(ValidationPipe) filterDto: GetUsersFilterDto): Promise<User[]> {        
-    return this.userService.getUsers(filterDto);
+  getUsers(@Query(ValidationPipe) filterDto: GetUsersFilterDto, @GetAdmin() admin: Admin): Promise<User[]> {        
+    return this.userService.getUsers(filterDto, admin);
   }
 }
