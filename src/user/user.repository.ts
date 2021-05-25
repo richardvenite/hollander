@@ -71,8 +71,8 @@ export class UserRepository extends Repository<User> {
     const { name, email, status } = filterDto;
     const query = this.createQueryBuilder('user');
 
-    query.innerJoin('user.userProfiles', 'profiles');
-    query.where('profiles.integrationId = :integrationId', { integrationId: admin.integration.id });
+    query.innerJoin('user.userProfiles', 'userProfiles');
+    query.where('userProfiles.integrationId = :integrationId', { integrationId: admin.integration.id });
 
     if (name) {
       query.andWhere('user.name LIKE :name', { name: `%${name}%` });
@@ -87,7 +87,19 @@ export class UserRepository extends Repository<User> {
     }
     
     const users = await query.getMany();
-    console.log(users);
+    
     return users;
+  }
+
+  async getUserById(id: number, integrationId: number): Promise<User> {
+    const query = this.createQueryBuilder('user');
+
+    query.innerJoin('user.userProfiles', 'userProfiles');
+    query.where('userProfiles.integrationId = :integrationId', { integrationId: integrationId });
+    query.andWhere('user.id = :id', { id: id });
+
+    const user = await query.getOne();
+
+    return user;
   }
 }

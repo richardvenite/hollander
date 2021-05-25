@@ -20,18 +20,18 @@ export class UserController {
   }
 
   @Get('/:id')
-  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return this.userService.getUserById(id);
+  getUserById(@Param('id', ParseIntPipe,) id: number, @GetAdmin() admin: Admin): Promise<User> {
+    return this.userService.getUserById(id, admin);
   }
 
   @Patch('/:id/status')
-  updateUserStatus(@Param('id', ParseIntPipe) id: number, @Body('status', UserStatusValidationPipe) status: UserStatus): Promise<User> {
-    return this.userService.updateUserStatus(id, status);
+  updateUserStatus(@Param('id', ParseIntPipe) id: number, @Body('status', UserStatusValidationPipe) status: UserStatus, @GetAdmin() admin: Admin): Promise<User> {
+    return this.userService.updateUserStatus(id, status, admin);
   }
 
   @Delete('/:id')
-  deleteUser(@Param('id',  ParseIntPipe) id: number): Promise<User> {
-    return this.userService.updateUserStatus(id, UserStatus.DELETED);
+  deleteUser(@Param('id',  ParseIntPipe) id: number, @GetAdmin() admin: Admin): Promise<User> {
+    return this.userService.updateUserStatus(id, UserStatus.DELETED, admin);
   }
 
   @Get()

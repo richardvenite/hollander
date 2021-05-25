@@ -19,8 +19,8 @@ export class UserService {
     return user;
   }
 
-  async getUserById(id: number): Promise<User> {
-    const user = await this.userRepository.findOne(id);
+  async getUserById(id: number, admin: Admin): Promise<User> {
+    const user = await this.userRepository.getUserById(id, admin.integration.id);
     
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -29,8 +29,8 @@ export class UserService {
     return user;
   }
 
-  async updateUserStatus(id: number, status: UserStatus): Promise<User> {
-    const user = await this.getUserById(id);
+  async updateUserStatus(id: number, status: UserStatus, admin: Admin): Promise<User> {
+    const user = await this.getUserById(id, admin);
     user.status = status;
     user.save();
 
