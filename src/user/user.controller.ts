@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateUserDto, GetUsersFilterDto } from './user.dto';
 import { UserStatusValidationPipe } from './pipes/user-pipes-validation.pipe';
 import { UserStatus } from './user-status.enum';
@@ -11,6 +11,8 @@ import { Admin } from 'src/auth/admin.entity';
 @Controller('user')
 @UseGuards(AuthGuard())
 export class UserController {
+  private logger = new Logger('UserController');
+
   constructor(private userService: UserService) {}
 
   @Post()
