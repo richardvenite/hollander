@@ -6,7 +6,7 @@ services:
     image: hollander
     container_name: node-hollander
     # slow command for first docker-compose up:
-    command: bash -c "yarn && yarn start:dev"
+    command: bash -c "yarn install && yarn start:debug"
     # default command
     # command: bash -c "yarn start"
     restart: unless-stopped
