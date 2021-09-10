@@ -4,7 +4,7 @@ import { CreateUserDto, GetUsersFilterDto } from './user.dto';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Admin } from 'src/auth/admin.entity';
+import { Admin } from '../auth/admin.entity';
 
 @Injectable()
 export class UserService {
@@ -14,9 +14,7 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto, admin: Admin): Promise<any> {
-    const user = await this.userRepository.createUser(createUserDto, admin);
-
-    return user;
+    return await this.userRepository.createUser(createUserDto, admin);
   }
 
   async getUserById(id: number, admin: Admin): Promise<User> {
@@ -31,10 +29,7 @@ export class UserService {
 
   async updateUserStatus(id: number, status: UserStatus, admin: Admin): Promise<User> {
     const user = await this.getUserById(id, admin);
-    user.status = status;
-    user.save();
-
-    return user
+    return await this.userRepository.updateUserStatus(user, status);
   }
 
   async getUsers(filterDto: GetUsersFilterDto, admin: Admin): Promise<User[]> {

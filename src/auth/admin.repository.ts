@@ -1,6 +1,6 @@
 import { ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { IntegrationRepository } from "src/integration/integration.repository";
-import { PasswordTrait } from "src/trait/password.trait";
+import { IntegrationRepository } from "../integration/integration.repository";
+import { PasswordTrait } from "../trait/password.trait";
 import { EntityRepository, getCustomRepository, Repository } from "typeorm";
 import { AuthCredentialsDto, AuthCreateDto } from "./admin.dto";
 import { Admin } from "./admin.entity";

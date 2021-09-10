@@ -3,12 +3,12 @@ import { CreateUserDto, GetUsersFilterDto } from "./user.dto";
 import { UserStatus } from "./user-status.enum";
 import { User } from "./user.entity";
 import { ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { PasswordTrait } from "src/trait/password.trait";
-import { Admin } from "src/auth/admin.entity";
-import { ProfileRepository } from "src/profile/profile.repository";
-import { UserProfileRepository } from "src/user-profile/user-profile.repository";
-import { Profile } from "src/profile/profile.entity";
-import { Integration } from "src/integration/integration.entity";
+import { PasswordTrait } from "../trait/password.trait";
+import { Admin } from "../auth/admin.entity";
+import { ProfileRepository } from "../profile/profile.repository";
+import { UserProfileRepository } from "../user-profile/user-profile.repository";
+import { Profile } from "../profile/profile.entity";
+import { Integration } from "../integration/integration.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -99,6 +99,13 @@ export class UserRepository extends Repository<User> {
     query.andWhere('user.id = :id', { id: id });
 
     const user = await query.getOne();
+
+    return user;
+  }
+
+  async updateUserStatus(user: User, status: UserStatus): Promise<User> {
+    user.status = status;
+    user.save();
 
     return user;
   }

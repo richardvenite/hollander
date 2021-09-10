@@ -5,8 +5,8 @@ import { UserStatus } from './user-status.enum';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
-import { GetAdmin } from 'src/auth/get-admin.decorator';
-import { Admin } from 'src/auth/admin.entity';
+import { GetAdmin } from '../auth/get-admin.decorator';
+import { Admin } from '../auth/admin.entity';
 
 @Controller('user')
 @UseGuards(AuthGuard())

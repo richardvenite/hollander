@@ -1,6 +1,6 @@
-import { Integration } from "src/integration/integration.entity";
-import { Profile } from "src/profile/profile.entity";
-import { User } from "src/user/user.entity";
+import { Integration } from "../integration/integration.entity";
+import { Profile } from "../profile/profile.entity";
+import { User } from "../user/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { UserProfile } from "./user-profile.entity";
 

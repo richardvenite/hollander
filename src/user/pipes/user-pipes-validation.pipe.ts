@@ -1,5 +1,5 @@
 import { PipeTransform, BadRequestException, NotFoundException } from "@nestjs/common";
-import { ProfileRepository } from "src/profile/profile.repository";
+import { ProfileRepository } from "../../profile/profile.repository";
 import { getCustomRepository } from "typeorm";
 import { UserStatus } from "../user-status.enum";
 
