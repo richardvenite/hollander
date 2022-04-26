@@ -8,6 +8,7 @@ import { ProfileModule } from './profile/profile.module';
 import { IntegrationModule } from './integration/integration.module';
 import { ConfigModule } from '@nestjs/config';
 import { configValidationSchema } from './config/config.schema';
+import { LessonService } from './lesson/lesson.service';
 
 @Module({
   imports: [
@@ -22,5 +23,6 @@ import { configValidationSchema } from './config/config.schema';
     TypeOrmModule.forRootAsync(typeOrmConfig),
     AuthModule,
   ],
+  providers: [LessonService],
 })
 export class AppModule {}
